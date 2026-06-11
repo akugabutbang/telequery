@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini App Saya</title>
+    <!-- 1. WAJIB: Pasang SDK Telegram Web App -->
+    <script src="https://telegram.org"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f4f4f9; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-top: 20px; }
+        button { background: #0088cc; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h1>Halo di Mini App! 👋</h1>
+    
+    <div class="card">
+        <h3>Data Pengguna:</h3>
+        <p>Nama: <span id="user-name">Memuat...</span></p>
+        <p>Username: @<span id="user-username">-</span></p>
+        <p>Query ID Sesi Anda:</p>
+        <textarea id="query-id" rows="4" style="width:100%; max-width:400px;" readonly></textarea>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Initialize Telegram Web App
+            const tg = window.Telegram?.WebApp;
+            
+            if (tg) {
+                tg.ready(); // Beritahu Telegram aplikasi siap
+                tg.expand(); // Paksa aplikasi terbuka layar penuh
+
+                // Ambil data user dari Telegram
+                const user = tg.initDataUnsafe?.user;
+                const queryId = tg.initDataUnsafe?.query_id;
+
+                if (user) {
+                    document.getElementById("user-name").innerText = user.first_name + " " + (user.last_name || "");
+                    document.getElementById("user-username").innerText = user.username || "Tidak ada";
+                }
+                
+                if (queryId) {
+                    document.getElementById("query-id").value = queryId;
+                } else {
+                    document.getElementById("query-id").value = "Query ID tidak ditemukan (mungkin dibuka via Direct Link).";
+                }
+            } else {
+                alert("Aplikasi harus dibuka di dalam Telegram!");
+            }
+        });
+    </script>
+</body>
+</html>
